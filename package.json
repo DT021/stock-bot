@@ -1,0 +1,18 @@
+{
+  "name": "bluchip",
+  "version": "1.0.0",
+  "description": "A robot that posts stock updates on Facebook.",
+  "main": "app.js",
+  "dependencies": {
+    "fb": "^1.0.2",
+    "node-schedule": "^1.1.0",
+    "request": "^2.72.0",
+    "winston": "^2.2.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Jasper Francisco",
+  "license": "ISC"
+}
