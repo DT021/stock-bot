@@ -4,7 +4,9 @@
   "description": "A robot that posts stock updates on Facebook.",
   "main": "app.js",
   "dependencies": {
+    "async": "^2.0.1",
     "fb": "^1.0.2",
+    "moment": "^2.14.1",
     "node-schedule": "^1.1.0",
     "request": "^2.72.0",
     "winston": "^2.2.0"
