@@ -128,13 +128,10 @@ function getAndPost() {
 		messageArray.push(handleGold(dataArray[1]));
 		messageArray.push(handleCrude(dataArray[2]));
 		messageArray.push(handleNickel(dataArray[3]));
-		
-		console.log(messageArray.join("\n"));
-		//postToFeed(messageArray.join("\n"), testFeed);
+
+		postToFeed(messageArray.join("\n"), testFeed);
 	});
 }
 
 console.log('app started');
-//schedule.scheduleJob('30 8,12 * * 1-5', getAndPost);
-
-getAndPost();
+schedule.scheduleJob('20 * * * 1-5', getAndPost);
