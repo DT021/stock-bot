@@ -19,7 +19,7 @@ var urls = [
 	"https://www.quandl.com/api/v3/datasets/YAHOO/INDEX_DJI.json?api_key=-ugtDdDfEr4UH_yS2MJh&column_index=4&start_date=2016-01-01", // DOW Jones
 	"https://www.quandl.com/api/v3/datasets/CME/GCZ2016.json?api_key=-ugtDdDfEr4UH_yS2MJh&start_date=2016-03-29", // Gold Futures, December 2016
 	"https://www.quandl.com/api/v3/datasets/CME/CLU2016.json?api_key=-ugtDdDfEr4UH_yS2MJh&start_date=2016-07-05", // Crude Oil Futures, September 2016
-	"https://www.quandl.com/api/v3/datasets/LME/PR_NI.json?api_key=-ugtDdDfEr4UH_yS2MJh", // Nickel Prices, LME
+	"http://www.investing.com/commodities/nickel?cid=959208", // Nickel Prices, LME
 ];
 
 winston.add(winston.transports.File, { filename: 'itlogs.log' });
@@ -27,10 +27,11 @@ winston.add(winston.transports.File, { filename: 'itlogs.log' });
 function getHTTP(url, callback) {
 	var options = {
 		url: url,
-		json: ( url.includes('google') ? false : true )
+		json: ( (url.includes('google') || url.includes('investing')) ? false : true ), // json is true for quandl API calls
+		headers: ( (url.includes('investing')) ? {
+			"User-Agent": "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.103 Safari/537.36"
+		} : undefined ) // Work-around for forbidden access with Investing.com
 	};
-
-	console.log(options.json);
 	
 	request(options, function(err, res, body) {
 		callback(err, body)
@@ -104,11 +105,23 @@ function handleCrude(data) {
 }
 
 function handleNickel(data) {
+	var nickelPrice = "";
+	var nickelPercentChange = "";
+
+	var $ = cheerio.load(data);
+	nickelPrice = $('#quotes_summary_current_data').children().children().last().children().children().first().text();
+	// I know they aren't beautiful but it works.
+	nickelPercentChange = $('#quotes_summary_current_data').children().children().last().children().children().filter(':nth-child(4)').first().text();
+	return "Nickel: " + nickelPrice + " (" + nickelPercentChange +  ")";
+	/*
+	Quandl doesn't update Nickel prices in time for posting. So, we scrape!
+	
 	var latestNickelDate = moment(data[0][0]).format('MMMM DD, YYYY');
 	var lastNickel = parseFloat(data[0][1]).toFixed(2);
 	var previousNickel = parseFloat(data[1][1]).toFixed(2);
 	
 	return "Nickel for " + latestNickelDate + ": " + formatValue(lastNickel) + " (" + percentChange(previousNickel, lastNickel).toFixed(2) + "%)";
+	*/
 }
 
 function percentChange(past, present) {
@@ -118,7 +131,7 @@ function percentChange(past, present) {
 function getAndPost() {
 	async.map(urls, getHTTP, function(err, res) {
 		if (err) return winston.log('error', err);
-		var dataArray = res.slice(1,5).map(function(val, i, array) {
+		var dataArray = res.slice(1,4).map(function(val, i, array) {
 			return val.dataset.data;
 		});
 		// data array has DOW on index 0, Gold on index 1
@@ -127,11 +140,13 @@ function getAndPost() {
 		messageArray.push(handleDOW(res[0]));
 		messageArray.push(handleGold(dataArray[1]));
 		messageArray.push(handleCrude(dataArray[2]));
-		messageArray.push(handleNickel(dataArray[3]));
+		messageArray.push(handleNickel(res[4]));
 
 		postToFeed(messageArray.join("\n"), testFeed);
 	});
 }
 
 console.log('app started');
-schedule.scheduleJob('20 * * * 1-5', getAndPost);
+getAndPost();
+
+//schedule.scheduleJob('20 * * * 1-5', getAndPost);
