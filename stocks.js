@@ -58,34 +58,25 @@ function postToFeed(message, feed) {
 }
 
 function handleDOW(data) {
-	var dowObj = { price: "", percentChange: "" }
-	var price, percentChange;
+	var dowObj = { date: "", price: "", percentChange: "" }
 
 	var $ = cheerio.load(data);
-	$('.pr').filter(function() {
-		var data = $(this);
+	var pricePanel = $("#market-data-div").children().first();
+    
+	// If this part looks confusing, just visit the google finance page for a visual guide
+	dowObj.price = pricePanel.children().first().children().first().text().trim();
+    dowObj.date = pricePanel.children().last().children().first().text().trim().substring(0, 5);
+    var parsedDate = new Date(dowDate + ", " + new Date().getFullYear()); // DJIA doesn't have a year on google finance web page
 
-		price = data.children().first().text();
-		dowObj.price = price;
-	});
-
+	// didn't bother to change the price change part
 	$('.id-price-change').filter(function() {
 		var data = $(this);
 		
 		percentChange = data.children().children().last().text();
 		dowObj.percentChange = percentChange;
-	})
-	/*
+	});
 
-	Right now, Quandl data is rejected in favor of Google Finance Scraping.
-
-	var latestDJIDate = moment(data[0][0]).format('MMMM DD, YYYY');
-	var latestDJI = parseFloat(data[0][1]).toFixed(2);
-	var previousDJI = parseFloat(data[1][1]).toFixed(2);
-	
-	*/
-
-	return "DJIA for " +  moment().add(-1, 'days').format('MMMM DD, YYYY') + ": " + dowObj.price + " " +  dowObj.percentChange;
+	return "DJIA for " +  dowObj.date +  ": " + dowObj.price + " " +  dowObj.percentChange;
 }
 
 function handleGold(data) {
@@ -110,7 +101,7 @@ function handleNickel(data) {
 
 	var $ = cheerio.load(data);
 	nickelPrice = $('#quotes_summary_current_data').children().children().last().children().children().first().text();
-	// I know they aren't beautiful but it works.
+	// I know html traversing isn't beautiful but it works.
 	nickelPercentChange = $('#quotes_summary_current_data').children().children().last().children().children().filter(':nth-child(4)').first().text();
 	return "Nickel: " + nickelPrice + " (" + nickelPercentChange +  ")";
 	/*
