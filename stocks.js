@@ -8,8 +8,8 @@ var cheerio = require('cheerio');
 var fs = require('fs');
 
 // multiple async calls source: http://stackoverflow.com/questions/34436455/calling-multiple-http-requests-in-a-single-http-request-in-node-js
-var myToken = "EAALvNCLGsB4BAIcflbUCjdvdY5osUTJesJBBHeERPlDhkBUomYwHFpbfCeF0N5NXsdM07os9m4BHTO0Edg23Sva8neOl8SPsq2XmQuHAwA072cOLmhL5pNNQynlBc4ZBMKBPQWOA5SUGyP3kpmoxUoOxDs9UZD";
-var bluChipToken = "EAALvNCLGsB4BACD7bpGPVBlCLcN4NhjJKpo544U78gONZBk593o7RPIeh73B5dT3UVs2OASDJmyfloQZC4eZAVpDmsBX0YtDhTnIMuvUgLQ7cSu2jEUSsMiok44RDieV7oZBWizBIYfrGZCqYU7FqxwnhqwOnZAhwZD";
+var myToken = "";
+var bluChipToken = "";
 FB.setAccessToken(bluChipToken);
 
 var testFeed = '100618296960419/feed';
