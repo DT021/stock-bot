@@ -16,9 +16,9 @@ var testFeed = '100618296960419/feed';
 
 var urls = [
 	"https://www.google.com/finance?cid=983582", // Google Finance URL for Dow Jones
-	"https://www.quandl.com/api/v3/datasets/YAHOO/INDEX_DJI.json?api_key=-ugtDdDfEr4UH_yS2MJh&column_index=4&start_date=2016-01-01", // DOW Jones
-	"https://www.quandl.com/api/v3/datasets/CME/GCZ2016.json?api_key=-ugtDdDfEr4UH_yS2MJh&start_date=2016-03-29", // Gold Futures, December 2016
-	"https://www.quandl.com/api/v3/datasets/CME/CLU2016.json?api_key=-ugtDdDfEr4UH_yS2MJh&start_date=2016-07-05", // Crude Oil Futures, September 2016
+	"https://www.quandl.com/api/v3/datasets/YAHOO/INDEX_DJI.json?api_key=&column_index=4&start_date=2016-01-01", // DOW Jones
+	"https://www.quandl.com/api/v3/datasets/CME/GCZ2016.json?api_key=&start_date=2016-03-29", // Gold Futures, December 2016
+	"https://www.quandl.com/api/v3/datasets/CME/CLU2016.json?api_key=&start_date=2016-07-05", // Crude Oil Futures, September 2016
 	"http://www.investing.com/commodities/nickel?cid=959208", // Nickel Prices, LME
 ];
 
